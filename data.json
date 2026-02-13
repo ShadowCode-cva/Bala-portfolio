@@ -1,0 +1,218 @@
+{
+  "settings": {
+    "id": "1",
+    "profile_image_url": null,
+    "name": "Bala Murugan S",
+    "title": "Video Editor & Graphic Designer",
+    "bio": "",
+    "phone": "+91 6369765639",
+    "email": "Balamuruganvijay06@gmail.com",
+    "address": "17/22, Katchakkaranpatti, Aniyappur, Manapparai, Tiruchirapalli 621307.",
+    "created_at": "2026-02-13T17:15:10.955Z",
+    "updated_at": "2026-02-13T23:22:00.000Z"
+  },
+  "skills": [
+    {
+      "id": "876961f3-e344-44bd-8d65-ce42fa46e4e4",
+      "name": "Editing",
+      "category": "Video Editing",
+      "proficiency": 80,
+      "description": "",
+      "sort_order": 0,
+      "icon_url": "",
+      "created_at": "2026-02-13T17:35:27.221Z",
+      "updated_at": "2026-02-13T17:38:57.057Z"
+    },
+    {
+      "id": "d6cf1576-5730-465c-a1de-95d56ad8206d",
+      "name": "Color Grading",
+      "category": "Video Editing",
+      "proficiency": 70,
+      "description": "",
+      "sort_order": 1,
+      "icon_url": "",
+      "created_at": "2026-02-13T17:37:39.163Z",
+      "updated_at": "2026-02-13T17:42:53.512Z"
+    },
+    {
+      "id": "c0ecf8a6-cc0f-4067-bfd2-3b55b3244854",
+      "name": "Sound Design",
+      "category": "Video Editing",
+      "proficiency": 75,
+      "description": "",
+      "sort_order": 2,
+      "icon_url": "",
+      "created_at": "2026-02-13T17:38:16.502Z",
+      "updated_at": "2026-02-13T17:39:12.570Z"
+    },
+    {
+      "id": "63964e06-44f6-4d18-ad11-4ad36174c363",
+      "name": "Motion Graphics",
+      "category": "Graphic Designing",
+      "proficiency": 60,
+      "description": "",
+      "sort_order": 3,
+      "icon_url": "",
+      "created_at": "2026-02-13T17:43:23.139Z",
+      "updated_at": "2026-02-13T17:43:23.139Z"
+    },
+    {
+      "id": "b1fe380c-5698-4a1a-9483-59dd0cd4f287",
+      "name": "UI / UX Design",
+      "category": "UI / UX Design",
+      "proficiency": 70,
+      "description": "",
+      "sort_order": 4,
+      "icon_url": "",
+      "created_at": "2026-02-13T17:43:55.705Z",
+      "updated_at": "2026-02-13T17:43:55.705Z"
+    }
+  ],
+  "tools": [
+    {
+      "id": "6acf9231-f60a-45d4-974e-cb54aaf8aa04",
+      "name": "Premiere Pro",
+      "level": "Advanced",
+      "proficiency": 80,
+      "icon_url": "",
+      "sort_order": 0,
+      "created_at": "2026-02-13T17:44:40.067Z",
+      "updated_at": "2026-02-13T17:46:00.270Z"
+    },
+    {
+      "id": "776c3087-0ae8-4910-8bbc-8ea8499c9c77",
+      "name": "Photoshop",
+      "level": "Advanced",
+      "proficiency": 80,
+      "icon_url": "",
+      "sort_order": 1,
+      "created_at": "2026-02-13T17:44:59.236Z",
+      "updated_at": "2026-02-13T17:45:54.586Z"
+    },
+    {
+      "id": "a6401f58-3486-4043-b6f9-3e0efda958da",
+      "name": "Illustrator",
+      "level": "Intermediate",
+      "proficiency": 85,
+      "icon_url": "",
+      "sort_order": 2,
+      "created_at": "2026-02-13T17:45:15.538Z",
+      "updated_at": "2026-02-13T17:45:15.538Z"
+    },
+    {
+      "id": "0f1cca7f-024e-4073-b295-e67855ca6cfe",
+      "name": "Figma",
+      "level": "Intermediate",
+      "proficiency": 70,
+      "icon_url": "",
+      "sort_order": 3,
+      "created_at": "2026-02-13T17:45:30.316Z",
+      "updated_at": "2026-02-13T17:45:30.316Z"
+    },
+    {
+      "id": "07d39579-4208-457f-b603-3d099f49aca3",
+      "name": "Davinci Resolve",
+      "level": "Intermediate",
+      "proficiency": 50,
+      "icon_url": "",
+      "sort_order": 4,
+      "created_at": "2026-02-13T17:45:43.302Z",
+      "updated_at": "2026-02-13T17:46:12.880Z"
+    },
+    {
+      "id": "ba714ae9-5720-4184-a41d-a4b00e860169",
+      "name": "After Effects",
+      "level": "Beginner",
+      "proficiency": 45,
+      "icon_url": "",
+      "sort_order": 5,
+      "created_at": "2026-02-13T17:46:25.261Z",
+      "updated_at": "2026-02-13T17:46:25.261Z"
+    },
+    {
+      "id": "0abe86e1-2b45-480e-83d1-8b021aa78296",
+      "name": "CorelDRAW",
+      "level": "Beginner",
+      "proficiency": 45,
+      "icon_url": "",
+      "sort_order": 6,
+      "created_at": "2026-02-13T17:46:47.089Z",
+      "updated_at": "2026-02-13T17:46:47.089Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "8b96f12a-7986-4ccc-963e-1c12a5e2cb58",
+      "title": "Full Stack Developer",
+      "description": "",
+      "category": "Video Editing",
+      "thumbnail_url": "https://i.pinimg.com/videos/thumbnails/originals/85/3f/d0/853fd0b9201230bb276190547660647f.0000000.jpg",
+      "video_url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/-s5YyZapMuU?si=hlKoTthv7AEQxGzj\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+      "video_type": "embed",
+      "link": "",
+      "featured": true,
+      "sort_order": 1,
+      "created_at": "2026-02-13T17:48:08.389Z",
+      "updated_at": "2026-02-13T17:48:08.389Z"
+    },
+    {
+      "id": "7daaa8d6-6859-4f4e-ad74-a299c3b5c933",
+      "title": "Project 1",
+      "description": "",
+      "category": "Video Editing",
+      "thumbnail_url": "https://i.pinimg.com/originals/ae/01/00/ae0100e56c474b3452357f90d1136693.jpg",
+      "video_url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/LuWLXUfJxag?si=psyEGQvgPGDhefTs\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+      "video_type": "embed",
+      "link": "",
+      "featured": true,
+      "sort_order": 2,
+      "created_at": "2026-02-13T18:13:52.511Z",
+      "updated_at": "2026-02-13T18:13:52.511Z"
+    },
+    {
+      "id": "45b1c5f8-d96d-4740-b569-d9219977480e",
+      "title": "Project 2",
+      "description": "",
+      "category": "Video Editing",
+      "thumbnail_url": "https://i.pinimg.com/originals/ae/01/00/ae0100e56c474b3452357f90d1136693.jpg",
+      "video_url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/PE2gLOwgYoo?si=2kaGbPUKsnNWlVAt\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+      "video_type": "embed",
+      "link": "",
+      "featured": true,
+      "sort_order": 3,
+      "created_at": "2026-02-13T18:14:34.199Z",
+      "updated_at": "2026-02-13T18:14:34.199Z"
+    },
+    {
+      "id": "468be303-6587-4f5a-b7ac-a2ed042d9b70",
+      "title": "Project 3",
+      "description": "",
+      "category": "Video Editing",
+      "thumbnail_url": "https://i.pinimg.com/originals/ae/01/00/ae0100e56c474b3452357f90d1136693.jpg",
+      "video_url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/EX3rGMf0g9A?si=bMGKPgetCUABty32\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+      "video_type": "embed",
+      "link": "",
+      "featured": true,
+      "sort_order": 4,
+      "created_at": "2026-02-13T18:15:36.065Z",
+      "updated_at": "2026-02-13T18:15:36.065Z"
+    },
+    {
+      "id": "18b633b7-7a9c-4cd8-99b5-7dcbb3231319",
+      "title": "Project 4",
+      "description": "",
+      "category": "Video Editing",
+      "thumbnail_url": "https://i.pinimg.com/originals/ae/01/00/ae0100e56c474b3452357f90d1136693.jpg",
+      "video_url": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/SVGsNH64L_4?si=fl_g3ehd_omMuKJ-\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+      "video_type": "embed",
+      "link": "",
+      "featured": true,
+      "sort_order": 5,
+      "created_at": "2026-02-13T18:16:34.151Z",
+      "updated_at": "2026-02-13T18:16:34.151Z"
+    }
+  ],
+  "languages": [],
+  "experience": [],
+  "sections": []
+}
