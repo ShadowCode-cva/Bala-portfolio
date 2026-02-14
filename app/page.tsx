@@ -7,14 +7,24 @@ export const dynamic = 'force-dynamic'
 export default async function HomePage() {
   const data = await getPortfolioData()
 
+  // 🛡 SAFETY NET
+  const safeData = data ?? {
+    settings: {},
+    skills: [],
+    tools: [],
+    projects: [],
+    languages: [],
+    experience: [],
+  }
+
   return (
     <PortfolioClient
-      settings={data.settings}
-      skills={data.skills}
-      tools={data.tools}
-      projects={data.projects}
-      languages={data.languages}
-      experience={data.experience}
+      settings={safeData.settings}
+      skills={safeData.skills}
+      tools={safeData.tools}
+      projects={safeData.projects}
+      languages={safeData.languages}
+      experience={safeData.experience}
     />
   )
 }
