@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: b-portfolio
+    runtime: docker
+    envVars:
+      - key: PORTFOLIO_DATA_PATH
+        value: /app/data/data.json
+      - key: ADMIN_USER
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+    disk:
+      name: portfolio-data
+      mountPath: /app/data
+      sizeGB: 1

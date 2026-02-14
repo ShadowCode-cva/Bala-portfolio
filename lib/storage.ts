@@ -12,7 +12,9 @@ export interface PortfolioData {
     sections: ContentSection[]
 }
 
-const DATA_FILE = path.join(process.cwd(), 'data.json')
+// Use an environment variable for the data path to support persistent storage in containers (e.g., Render Disks)
+// Fallback to local 'data.json' if not set
+const DATA_FILE = process.env.PORTFOLIO_DATA_PATH || path.join(process.cwd(), 'data.json')
 
 const defaultData: PortfolioData = {
     settings: {
