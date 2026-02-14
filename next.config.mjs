@@ -17,6 +17,8 @@ const nextConfig = {
   },
   // Ensure trailing slashes are consistent for SEO and Vercel
   trailingSlash: true,
+  // Optimize for Docker containers
+  output: 'standalone',
 }
 
 export default nextConfig

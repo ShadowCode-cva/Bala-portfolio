@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.github
+.vscode
+*.log
+.env.local
+pnpm-lock.yaml
+Dockerfile
+.dockerignore
+README.md
+WALKTHROUGH.md
