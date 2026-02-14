@@ -3,14 +3,11 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Copy package files
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies using npm ci for deterministic builds
+RUN npm ci
 
 # Stage 2: Builder
 FROM node:20-alpine AS builder
@@ -18,13 +15,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Install pnpm for build
-RUN npm install -g pnpm
-
 # Disable telemetry during build
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN pnpm run build
+RUN npm run build
 
 # Stage 3: Runner
 FROM node:20-alpine AS runner
@@ -49,7 +43,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Ensure data.json can be written to by the nextjs user
-# Note: This only persists during the container's lifetime
 COPY --from=builder --chown=nextjs:nodejs /app/data.json ./data.json
 
 USER nextjs
@@ -57,7 +50,6 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT 3000
-# set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
 CMD ["node", "server.js"]
