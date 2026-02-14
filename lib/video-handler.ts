@@ -21,7 +21,8 @@ export interface VideoMetadata {
 export function detectVideoSource(url: string | null): VideoSource {
   if (!url) return 'unknown';
   const lower = url.toLowerCase();
-  if (lower.includes('youtube.com') || lower.includes('youtu.be')) return 'youtube';
+  // Match youtube.com, youtu.be, youtube-nocookie.com
+  if (lower.includes('youtube') || lower.includes('youtu.be')) return 'youtube';
   if (lower.includes('vimeo.com')) return 'vimeo';
   if (lower.includes('drive.google.com')) return 'gdrive';
   if (lower.startsWith('http') && (lower.includes('.mp4') || lower.includes('.webm') || lower.includes('.mov'))) return 'local';
@@ -42,12 +43,11 @@ function extractIframeSrc(input: string): string | null {
 
 /**
  * Normalize a YouTube embed URL that's already in embed format
- * Example: https://www.youtube.com/embed/VIDEO_ID → extracts and validates ID
  */
 function normalizeDirectEmbedUrl(url: string): string | null {
-  // Check if it's already a YouTube embed URL
-  if (url.includes('youtube.com/embed/')) {
-    const match = url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+  // Check if it's already a YouTube embed URL (handles nocookie too)
+  if (url.includes('/embed/')) {
+    const match = url.match(/(?:youtube\.com|youtube-nocookie\.com)\/embed\/([a-zA-Z0-9_-]+)/);
     if (match && match[1]) {
       return `https://www.youtube.com/embed/${match[1]}`;
     }
@@ -88,14 +88,12 @@ export function validateVideoUrl(url: string | null): VideoMetadata {
   // STEP 1: Extract src from iframe HTML if user pasted raw iframe
   const iframeSrc = extractIframeSrc(processedUrl);
   if (iframeSrc) {
-    console.log('[VIDEO] Extracted iframe src:', iframeSrc);
     processedUrl = iframeSrc;
   }
 
   // STEP 2: Try to normalize if it's already an embed URL
   const normalizedEmbed = normalizeDirectEmbedUrl(processedUrl);
   if (normalizedEmbed) {
-    console.log('[VIDEO] Using normalized embed URL:', normalizedEmbed);
     return {
       source: detectVideoSource(normalizedEmbed),
       embedUrl: normalizedEmbed,
@@ -145,21 +143,27 @@ function convertYouTubeUrl(url: string): string {
     let videoId = null;
 
     // Handle watch?v= format
-    if (url.includes('youtube.com/watch')) {
-      const urlObj = new URL(url);
-      videoId = urlObj.searchParams.get('v');
+    if (url.includes('/watch')) {
+      const match = url.match(/[?&]v=([a-zA-Z0-9_-]+)/);
+      if (match) videoId = match[1];
     }
     // Handle youtu.be/ format
     else if (url.includes('youtu.be/')) {
       videoId = url.split('/').pop()?.split('?')[0];
     }
-    // Handle youtube.com/shorts/ format
-    else if (url.includes('youtube.com/shorts/')) {
+    // Handle shorts/ format
+    else if (url.includes('/shorts/')) {
       videoId = url.split('/shorts/')[1]?.split(/[/?]/)[0];
     }
-    // Handle youtube.com/embed/ format (already embed, but maybe with extra params)
-    else if (url.includes('youtube.com/embed/')) {
+    // Handle embed/ format
+    else if (url.includes('/embed/')) {
       videoId = url.split('/embed/')[1]?.split(/[/?]/)[0];
+    }
+
+    if (!videoId) {
+      // Last ditch effort: try to find anything that looks like an ID
+      const match = url.match(/(?:v=|youtu\.be\/|embed\/|\/v\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+      if (match) videoId = match[1];
     }
 
     if (!videoId) throw new Error('Could not extract video ID');
@@ -170,6 +174,7 @@ function convertYouTubeUrl(url: string): string {
     throw new Error('Invalid YouTube URL');
   }
 }
+
 
 /**
  * Gets a YouTube embed URL with autoplay, mute, and playsinline parameters
