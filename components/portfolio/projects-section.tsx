@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Play, ExternalLink, Film, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -91,23 +91,53 @@ const PortraitDeviceFrame = React.memo(({
 
           {/* Screen - portrait 9:16 ratio */}
           <div className="relative aspect-[9/16] bg-black rounded-lg md:rounded-xl overflow-hidden">
-            {project.thumbnail_url ? (
+            {/* Video Autoplay Layer */}
+            <div className="absolute inset-0 z-0">
+              {project.video_url ? (
+                project.video_type === 'embed' ? (
+                  <iframe
+                    src={`${project.video_url}${project.video_url.includes('?') ? '&' : '?'}autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=${project.video_url.split('/').pop()?.split('?')[0]}`}
+                    className="w-[101%] h-[101%] -ml-[0.5%] -mt-[0.5%] border-0 pointer-events-none scale-110"
+                    allow="autoplay; fullscreen"
+                  />
+                ) : (
+                  <video
+                    src={project.video_url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                )
+              ) : project.thumbnail_url ? (
+                <motion.img
+                  src={project.thumbnail_url}
+                  alt={project.title}
+                  className="object-cover w-full h-full"
+                  loading="lazy"
+                  animate={{
+                    scale: isHovering && isActive ? 1.05 : 1,
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary/30 via-muted to-primary/10 flex items-center justify-center">
+                  <Film className="w-12 h-12 text-primary/40" />
+                </div>
+              )}
+            </div>
+
+            {/* Thumbnail Fade-out Overlay (if video is loading or as fallback) */}
+            {project.thumbnail_url && project.video_url && (
               <motion.img
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
                 src={project.thumbnail_url}
-                alt={project.title}
-                className="object-cover w-full h-full"
-                loading="lazy"
-                sizes="(max-width: 768px) 240px, (max-width: 1024px) 280px, 340px"
-                animate={{
-                  scale: isHovering && isActive ? 1.05 : 1,
-                }}
-                transition={{ duration: 0.3 }}
-                style={{ willChange: isActive ? 'transform' : 'auto' }}
+                alt=""
+                className="absolute inset-0 object-cover w-full h-full z-10 pointer-events-none"
               />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary/30 via-muted to-primary/10 flex items-center justify-center">
-                <Film className="w-12 h-12 text-primary/40" />
-              </div>
             )}
 
             {/* Hover overlay */}
@@ -148,31 +178,18 @@ const PortraitDeviceFrame = React.memo(({
                       transition={{ delay: 0.1, duration: 0.3 }}
                       className="flex gap-2 mt-1"
                     >
-                      {project?.video_url && (
-                        <Button
-                          size="sm"
-                          className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 text-xs h-7"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            onWatchClick(project)
-                          }}
-                        >
-                          <Play className="w-3 h-3 mr-1" />
-                          Watch
-                        </Button>
-                      )}
                       {project?.link && (
                         <Button
                           size="sm"
                           variant="outline"
-                          className="rounded-full bg-transparent border-white/30 hover:bg-white/10 text-xs h-7"
+                          className="rounded-full bg-white/10 hover:bg-white/20 border-white/30 text-xs h-8 px-4"
                           onClick={(e) => {
                             e.stopPropagation()
                             window.open(project.link!, '_blank')
                           }}
                         >
-                          <ExternalLink className="w-3 h-3 mr-1" />
-                          View
+                          <ExternalLink className="w-3 h-3 mr-1.5" />
+                          View Project
                         </Button>
                       )}
                     </motion.div>
@@ -212,30 +229,45 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
   })
 
   const [activeIndex, setActiveIndex] = useState(0)
+  const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [displayMode, setDisplayMode] = useState<'single' | 'double' | 'carousel'>('carousel')
   const [isPaused, setIsPaused] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const isInteracting = useRef(false)
 
-  // Determine display mode based on project count
+  // Get unique categories (All + categories from projects)
+  const categories = useMemo(() => {
+    const uniqueCats = Array.from(new Set(validProjects.map(p => p.category || 'Video Editing')))
+    return ['All', ...uniqueCats]
+  }, [validProjects])
+
+  // Filter projects based on selected category
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === 'All') return validProjects
+    return validProjects.filter(p => p.category === selectedCategory)
+  }, [validProjects, selectedCategory])
+
+  // Determine display mode based on filtered project count
   useEffect(() => {
-    if (validProjects.length === 1) {
+    if (filteredProjects.length === 1) {
       setDisplayMode('single')
       setActiveIndex(0)
-    } else if (validProjects.length === 2) {
+    } else if (filteredProjects.length === 2) {
       setDisplayMode('double')
+      setActiveIndex(0)
     } else {
       setDisplayMode('carousel')
+      setActiveIndex(0)
     }
-  }, [validProjects.length])
+  }, [filteredProjects.length])
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + validProjects.length) % validProjects.length)
-  }, [validProjects.length])
+    setActiveIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length)
+  }, [filteredProjects.length])
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % validProjects.length)
-  }, [validProjects.length])
+    setActiveIndex((prev) => (prev + 1) % filteredProjects.length)
+  }, [filteredProjects.length])
 
   // Auto-advance carousel every 8 seconds
   useEffect(() => {
@@ -299,16 +331,41 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
           </p>
         </motion.div>
 
+        {/* Category Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-2 mb-12 md:mb-16"
+        >
+          {categories.map((cat) => (
+            <Button
+              key={cat}
+              variant={selectedCategory === cat ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSelectedCategory(cat)}
+              className={`rounded-full px-5 h-9 transition-all ${selectedCategory === cat
+                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                : 'hover:bg-primary/10 hover:border-primary/50'
+                }`}
+            >
+              {cat}
+            </Button>
+          ))}
+        </motion.div>
+
         {/* Projects display - responsive layout */}
         <div className="flex items-center justify-center">
           {displayMode === 'single' && (
             <motion.div
+              layout
               initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.5 }}
             >
               <PortraitDeviceFrame
-                project={validProjects[0]}
+                project={filteredProjects[0]}
                 isActive={true}
                 isCentered={true}
                 onClick={() => { }}
@@ -320,22 +377,26 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
 
           {displayMode === 'double' && (
             <div className="flex gap-8 md:gap-12 justify-center items-center flex-wrap">
-              {validProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <PortraitDeviceFrame
-                    project={project}
-                    isActive={true}
-                    onClick={() => { }}
-                    onHoverChange={handleInteractionChange}
-                    onWatchClick={handleWatchClick}
-                  />
-                </motion.div>
-              ))}
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project: Project, index: number) => (
+                  <motion.div
+                    key={project.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <PortraitDeviceFrame
+                      project={project}
+                      isActive={true}
+                      onClick={() => { }}
+                      onHoverChange={handleInteractionChange}
+                      onWatchClick={handleWatchClick}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           )}
 
@@ -356,19 +417,21 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                 <div className="flex-1 flex justify-center overflow-hidden">
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={activeIndex}
+                      key={filteredProjects[activeIndex]?.id || 'none'}
                       initial={{ opacity: 0, x: 100 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -100 }}
                       transition={{ duration: 0.4, ease: 'easeInOut' }}
                     >
-                      <PortraitDeviceFrame
-                        project={validProjects[activeIndex]}
-                        isActive={true}
-                        onClick={() => { }}
-                        onHoverChange={handleInteractionChange}
-                        onWatchClick={handleWatchClick}
-                      />
+                      {filteredProjects[activeIndex] && (
+                        <PortraitDeviceFrame
+                          project={filteredProjects[activeIndex]}
+                          isActive={true}
+                          onClick={() => { }}
+                          onHoverChange={handleInteractionChange}
+                          onWatchClick={handleWatchClick}
+                        />
+                      )}
                     </motion.div>
                   </AnimatePresence>
                 </div>
@@ -391,7 +454,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
                 transition={{ delay: 0.4 }}
                 className="flex justify-center gap-2 mt-8"
               >
-                {validProjects.map((_, index) => (
+                {filteredProjects.map((_: any, index: number) => (
                   <motion.button
                     key={index}
                     onClick={() => setActiveIndex(index)}
@@ -409,16 +472,14 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         </div>
 
         {/* Project count info */}
-        {displayMode === 'carousel' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-center mt-10 text-sm text-muted-foreground"
-          >
-            {activeIndex + 1} / {projects.length}
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: 0.5 }}
+          className="text-center mt-10 text-sm text-muted-foreground"
+        >
+          {activeIndex + 1} / {filteredProjects.length}
+        </motion.div>
         {/* Video Modal */}
         <VideoModal
           project={selectedProject}

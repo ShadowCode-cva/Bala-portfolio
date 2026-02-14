@@ -46,7 +46,27 @@ export async function getPortfolioData(): Promise<PortfolioData> {
         }
 
         const fileContent = fs.readFileSync(DATA_FILE, 'utf8')
-        return JSON.parse(fileContent) as PortfolioData
+        const data = JSON.parse(fileContent) as PortfolioData
+
+        // Data Migration: Ensure all projects have a category (default to Video Editing)
+        if (data.projects && Array.isArray(data.projects)) {
+            let hasChanges = false
+            data.projects = data.projects.map(project => {
+                if (!project.category) {
+                    hasChanges = true
+                    return { ...project, category: 'Video Editing' }
+                }
+                return project
+            })
+
+            // If we fixed any projects, save back to file for persistence
+            if (hasChanges) {
+                console.log('Migrated project categories to default "Video Editing"')
+                savePortfolioData(data)
+            }
+        }
+
+        return data
     } catch (error) {
         console.error('Error reading data from data.json:', error)
         return defaultData

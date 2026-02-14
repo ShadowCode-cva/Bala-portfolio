@@ -276,7 +276,7 @@ export function ProjectsManager({ projects }: ProjectsManagerProps) {
     await saveProjects(updatedProjects)
   }
 
-  const categories = ['Video Editing', 'Graphic Design', 'Motion Graphics', 'Photography']
+  const categories = ['Video Editing', 'Graphic Design', 'Motion Graphics', 'UI Design', 'Photography']
 
   return (
     <div className="space-y-6">
@@ -328,11 +328,12 @@ export function ProjectsManager({ projects }: ProjectsManagerProps) {
                 <div>
                   <label className="text-sm font-medium block mb-2">Category *</label>
                   <select
-                    value={formData.category}
+                    value={formData.category || 'Video Editing'}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md border border-input bg-background text-foreground"
+                    className="w-full px-3 py-2 rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                     required
                   >
+                    <option value="" disabled>Select a category</option>
                     {categories.map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
                     ))}
