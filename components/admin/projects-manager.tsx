@@ -200,13 +200,19 @@ export function ProjectsManager({ projects }: ProjectsManagerProps) {
     try {
       let updatedProjects = [...projects]
 
+      // Sanitize video_url before saving if it's an embed type
+      const processedFormData = { ...formData }
+      if (processedFormData.video_type === 'embed' && processedFormData.video_url) {
+        processedFormData.video_url = getEmbedUrl(processedFormData.video_url)
+      }
+
       if (editingProject) {
         // Update existing
         updatedProjects = updatedProjects.map(p =>
           p.id === editingProject.id
             ? {
               ...p,
-              ...formData,
+              ...processedFormData,
               updated_at: new Date().toISOString()
             }
             : p
@@ -215,7 +221,7 @@ export function ProjectsManager({ projects }: ProjectsManagerProps) {
         // Create new
         const newProject: Project = {
           id: crypto.randomUUID(),
-          ...formData,
+          ...processedFormData,
           // Sort order is next in line
           sort_order: projects.length > 0 ? Math.max(...projects.map(p => p.sort_order)) + 1 : 1,
           created_at: new Date().toISOString(),

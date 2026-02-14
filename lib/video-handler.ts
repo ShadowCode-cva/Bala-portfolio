@@ -52,7 +52,7 @@ function normalizeDirectEmbedUrl(url: string): string | null {
       return `https://www.youtube.com/embed/${match[1]}`;
     }
   }
-  
+
   // Check if it's a Vimeo embed URL
   if (url.includes('player.vimeo.com/video/')) {
     const match = url.match(/player\.vimeo\.com\/video\/(\d+)/);
@@ -60,7 +60,7 @@ function normalizeDirectEmbedUrl(url: string): string | null {
       return `https://player.vimeo.com/video/${match[1]}`;
     }
   }
-  
+
   // Check if it's a Google Drive preview URL
   if (url.includes('drive.google.com/file/d/')) {
     const match = url.match(/\/d\/([a-zA-Z0-9_-]+)\//);
@@ -68,7 +68,7 @@ function normalizeDirectEmbedUrl(url: string): string | null {
       return `https://drive.google.com/file/d/${match[1]}/preview`;
     }
   }
-  
+
   return null;
 }
 
@@ -143,20 +143,65 @@ export function validateVideoUrl(url: string | null): VideoMetadata {
 function convertYouTubeUrl(url: string): string {
   try {
     let videoId = null;
+
+    // Handle watch?v= format
     if (url.includes('youtube.com/watch')) {
       const urlObj = new URL(url);
       videoId = urlObj.searchParams.get('v');
-    } else if (url.includes('youtu.be/')) {
+    }
+    // Handle youtu.be/ format
+    else if (url.includes('youtu.be/')) {
       videoId = url.split('/').pop()?.split('?')[0];
-    } else if (url.includes('youtube.com/shorts/')) {
+    }
+    // Handle youtube.com/shorts/ format
+    else if (url.includes('youtube.com/shorts/')) {
       videoId = url.split('/shorts/')[1]?.split(/[/?]/)[0];
     }
+    // Handle youtube.com/embed/ format (already embed, but maybe with extra params)
+    else if (url.includes('youtube.com/embed/')) {
+      videoId = url.split('/embed/')[1]?.split(/[/?]/)[0];
+    }
+
     if (!videoId) throw new Error('Could not extract video ID');
+
+    // Return clean base embed URL
     return `https://www.youtube.com/embed/${videoId}`;
   } catch (e) {
     throw new Error('Invalid YouTube URL');
   }
 }
+
+/**
+ * Gets a YouTube embed URL with autoplay, mute, and playsinline parameters
+ * Optimized for background previews and auto-playing iframes
+ */
+export function getYouTubeEmbedUrl(url: string, isBackground: boolean = false): string | null {
+  try {
+    const meta = validateVideoUrl(url);
+    if (meta.source !== 'youtube' || !meta.embedUrl) return null;
+
+    const base = meta.embedUrl;
+    const params = new URLSearchParams();
+    params.set('autoplay', '1');
+    params.set('mute', '1');
+    params.set('playsinline', '1');
+
+    if (isBackground) {
+      params.set('controls', '0');
+      params.set('loop', '1');
+      // Extract video ID for loop parameter (YouTube requirement)
+      const videoId = base.split('/').pop();
+      if (videoId) {
+        params.set('playlist', videoId);
+      }
+    }
+
+    return `${base}?${params.toString()}`;
+  } catch (e) {
+    return null;
+  }
+}
+
 
 function convertVimeoUrl(url: string): string {
   try {

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import { validateVideoUrl } from '@/lib/video-handler'
+import { validateVideoUrl, getYouTubeEmbedUrl } from '@/lib/video-handler'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Project } from '@/lib/types'
 
@@ -35,11 +35,11 @@ function VideoModalContent({ project, isOpen, onClose }: { project: Project; isO
             setVideoLoaded(false)
             setIsLoading(false)
             setError(false)
-            
+
             const timer = setTimeout(() => {
                 setIsLoading(true)
             }, 300)
-            
+
             return () => clearTimeout(timer)
         }
     }, [isOpen, project?.id])
@@ -157,7 +157,7 @@ function VideoModalContent({ project, isOpen, onClose }: { project: Project; isO
                                 className="absolute inset-0"
                             >
                                 <iframe
-                                    src={`${videoMetadata.embedUrl}${videoMetadata.embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
+                                    src={getYouTubeEmbedUrl(project.video_url!) || videoMetadata.embedUrl || ''}
                                     title={project.title || 'Video'}
                                     className="w-full h-full border-0"
                                     allow="autoplay; fullscreen; picture-in-picture"
@@ -225,7 +225,7 @@ function VideoModalContent({ project, isOpen, onClose }: { project: Project; isO
 export function VideoModal({ project, isOpen, onClose }: VideoModalProps) {
     // Render nothing if no project (Dialog handles this internally with `open={false}`)
     if (!project) {
-        return <Dialog open={false} onOpenChange={() => {}} />
+        return <Dialog open={false} onOpenChange={() => { }} />
     }
 
     return <VideoModalContent project={project} isOpen={isOpen} onClose={onClose} />

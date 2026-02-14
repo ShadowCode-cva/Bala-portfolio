@@ -5,6 +5,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Play, ExternalLink, Film, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { VideoModal } from './video-modal'
+import { getYouTubeEmbedUrl } from '@/lib/video-handler'
 import type { Project } from '@/lib/types'
 
 interface ProjectsSectionProps {
@@ -96,7 +97,7 @@ const PortraitDeviceFrame = React.memo(({
               {project.video_url ? (
                 project.video_type === 'embed' ? (
                   <iframe
-                    src={`${project.video_url}${project.video_url.includes('?') ? '&' : '?'}autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=${project.video_url.split('/').pop()?.split('?')[0]}`}
+                    src={getYouTubeEmbedUrl(project.video_url, true) || project.video_url}
                     className="w-[101%] h-[101%] -ml-[0.5%] -mt-[0.5%] border-0 pointer-events-none scale-110"
                     allow="autoplay; fullscreen"
                   />

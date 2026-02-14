@@ -1,0 +1,22 @@
+--- YouTube URL Transformation Tests ---
+
+Test 1: https://www.youtube.com/watch?v=abc123&t=5
+  Clean Embed: https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1
+  Background : https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=abc123
+
+Test 2: https://youtu.be/abc123?t=10
+  Clean Embed: https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1
+  Background : https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=abc123
+
+Test 3: https://www.youtube.com/shorts/abc123?si=xyz
+  Clean Embed: https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1
+  Background : https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=abc123
+
+Test 4: https://www.youtube.com/embed/abc123?autoplay=0
+  Clean Embed: https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1
+  Background : https://www.youtube.com/embed/abc123?autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=abc123
+
+Test 5: https://www.youtube.com/watch?v=LuWLXUfJxag
+  Clean Embed: https://www.youtube.com/embed/LuWLXUfJxag?autoplay=1&mute=1&playsinline=1
+  Background : https://www.youtube.com/embed/LuWLXUfJxag?autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=LuWLXUfJxag
+
