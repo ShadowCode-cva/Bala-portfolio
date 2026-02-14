@@ -92,26 +92,9 @@ const PortraitDeviceFrame = React.memo(({
 
           {/* Screen - portrait 9:16 ratio */}
           <div className="relative aspect-[9/16] bg-black rounded-lg md:rounded-xl overflow-hidden">
-            {/* Video Autoplay Layer */}
+            {/* Static Image / Thumbnail Layer */}
             <div className="absolute inset-0 z-0">
-              {project.video_url ? (
-                project.video_type === 'embed' ? (
-                  <iframe
-                    src={getYouTubeEmbedUrl(project.video_url, true) || project.video_url}
-                    className="w-[101%] h-[101%] -ml-[0.5%] -mt-[0.5%] border-0 pointer-events-none scale-110"
-                    allow="autoplay; fullscreen"
-                  />
-                ) : (
-                  <video
-                    src={project.video_url}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full h-full object-cover"
-                  />
-                )
-              ) : project.thumbnail_url ? (
+              {project.thumbnail_url ? (
                 <motion.img
                   src={project.thumbnail_url}
                   alt={project.title}
@@ -129,17 +112,19 @@ const PortraitDeviceFrame = React.memo(({
               )}
             </div>
 
-            {/* Thumbnail Fade-out Overlay (if video is loading or as fallback) */}
-            {project.thumbnail_url && project.video_url && (
-              <motion.img
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
-                src={project.thumbnail_url}
-                alt=""
-                className="absolute inset-0 object-cover w-full h-full z-10 pointer-events-none"
-              />
-            )}
+            {/* Always visible play button for clarity */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.5 }}
+                animate={{
+                  scale: isHovering ? 1.1 : 1,
+                  opacity: isHovering ? 1 : 0.6
+                }}
+                className="bg-primary/90 text-primary-foreground p-4 rounded-full shadow-xl"
+              >
+                <Play className="w-8 h-8 fill-current" />
+              </motion.div>
+            </div>
 
             {/* Hover overlay */}
             <AnimatePresence>
@@ -177,8 +162,20 @@ const PortraitDeviceFrame = React.memo(({
                       initial={{ y: 10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.1, duration: 0.3 }}
-                      className="flex gap-2 mt-1"
+                      className="flex flex-col items-center gap-2 mt-2"
                     >
+                      <Button
+                        size="sm"
+                        className="rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg px-6"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onWatchClick(project)
+                        }}
+                      >
+                        <Play className="w-4 h-4 mr-2 fill-current" />
+                        Watch Video
+                      </Button>
+
                       {project?.link && (
                         <Button
                           size="sm"
